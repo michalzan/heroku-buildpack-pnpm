@@ -146,7 +146,7 @@ pnpm_node_modules() {
 
   echo "Installing node modules (pnpm-lock.yaml)"
   cd "$build_dir" || return
-  monitor "pnpm-install" pnpm install
+  monitor "pnpm-install" NODE_ENV=CI pnpm install
 }
 
 yarn_2_install() {
@@ -201,6 +201,13 @@ yarn_prune_devdependencies() {
     monitor "yarn-prune" yarn install --frozen-lockfile --ignore-engines --ignore-scripts --prefer-offline 2>&1
     meta_set "skipped-prune" "false"
   fi
+}
+
+pnpm_prune_devdependencies() {
+  echo "Pruning pnpm devDependencies"
+  cd "$build_dir" || return
+  
+  monitor "pnpm prune" pnpm install
 }
 
 has_npm_lock() {
