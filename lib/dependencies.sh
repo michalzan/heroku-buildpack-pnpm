@@ -146,7 +146,10 @@ pnpm_node_modules() {
 
   echo "Installing node modules (pnpm-lock.yaml)"
   cd "$build_dir" || return
-  monitor "pnpm-install" NODE_ENV=CI pnpm install
+  local node_env_old=$NODE_ENV
+  export NODE_ENV=CI
+  monitor "pnpm-install" pnpm install
+  export NODE_ENV=$node_env_old
 }
 
 yarn_2_install() {
@@ -204,9 +207,11 @@ yarn_prune_devdependencies() {
 }
 
 pnpm_prune_devdependencies() {
+  local build_dir=${1:-}
+
   echo "Pruning pnpm devDependencies"
   cd "$build_dir" || return
-  
+
   monitor "pnpm prune" pnpm install
 }
 
