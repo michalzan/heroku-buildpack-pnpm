@@ -211,7 +211,10 @@ pnpm_prune_devdependencies() {
 
   echo "Pruning pnpm devDependencies"
   cd "$build_dir" || return
-
+   # When NODE_ENV is set to production, pnpm is acting wierd.
+   # Simply pruning the devdeps doesn't remove them from node_modules and therefore doesn't reduce the slug size at all
+   # Therefore we need to delete them and let pnpm install only normal deps as NODE_ENV=production
+  rm -rf ./node_modules
   monitor "pnpm prune" pnpm install
 }
 
